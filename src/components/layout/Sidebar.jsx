@@ -1,95 +1,60 @@
-import {
-    LayoutDashboard,
-    ListTodo,
-    Clock,
-    CheckCircle,
-    CalendarDays,
-    Settings,
-    LogOut
-} from "lucide-react";
+import React from "react";
+import { NavLink } from "react-router-dom";
 
-const menuItems = [
-    { name: "Dashboard", icon: LayoutDashboard },
-    { name: "My Tasks", icon: ListTodo },
-    { name: "In Progress", icon: Clock },
-    { name: "Completed", icon: CheckCircle },
-    { name: "Calendar", icon: CalendarDays },
-    { name: "Settings", icon: Settings }
-];
+function Sidebar({ isOpen, closeSidebar }) {
 
-function Sidebar({ activePage, setActivePage }) {
+    const menuItems = [
+        { name: "Dashboard", path: "/", icon: "🏠" },
+        { name: "My Tasks", path: "/tasks", icon: "📋" },
+        { name: "Create Task", path: "/create-task", icon: "➕" },
+        { name: "Calendar", path: "/calendar", icon: "📅" },
+        { name: "Profile", path: "/profile", icon: "👤" }
+    ];
 
     return (
+        <>
+            <aside className={`sidebar ${isOpen ? "open" : ""}`}>
 
-        <aside className="hidden md:flex flex-col w-64 min-h-screen bg-slate-950 text-white p-5">
+                <div className="sidebar-heading">
+                    WORKSPACE
+                </div>
 
-            {/* Logo */}
+                <ul>
 
-            <div className="mb-10">
+                    {menuItems.map((item) => (
 
-                <h1 className="text-2xl font-bold text-blue-400">
-                    TaskFlow.
-                </h1>
+                        <li key={item.path}>
 
-                <p className="text-xs text-slate-400 mt-1">
-                    Smart Task Management
-                </p>
+                            <NavLink
+                                to={item.path}
+                                end={item.path === "/"}
+                                className={({ isActive }) =>
+                                    isActive ? "nav-item active" : "nav-item"
+                                }
+                                onClick={closeSidebar}
+                            >
 
-            </div>
+                                <span>{item.icon}</span>
+                                {item.name}
 
-            {/* Workspace */}
+                            </NavLink>
 
-            <p className="text-xs uppercase tracking-wider text-slate-500 mb-4">
-                Workspace
-            </p>
+                        </li>
 
-            {/* Navigation */}
+                    ))}
 
-            <nav className="space-y-2 flex-1">
+                </ul>
 
-                {menuItems.map((item) => {
+            </aside>
 
-                    const Icon = item.icon;
-
-                    return (
-
-                        <button
-                            key={item.name}
-                            onClick={() => setActivePage(item.name)}
-                            className={`w-full flex items-center gap-3 p-3 rounded-lg text-sm transition-all ${
-                                activePage === item.name
-                                    ? "bg-blue-600 text-white"
-                                    : "text-slate-400 hover:bg-slate-800 hover:text-white"
-                            }`}
-                        >
-
-                            <Icon size={19} />
-
-                            <span>{item.name}</span>
-
-                        </button>
-
-                    );
-
-                })}
-
-            </nav>
-
-            {/* Logout */}
-
-            <button className="flex items-center gap-3 p-3 text-slate-400 hover:text-white">
-
-                <LogOut size={19} />
-
-                <span>Logout</span>
-
-            </button>
-
-        </aside>
-
+            {isOpen && (
+                <div
+                    className="sidebar-overlay"
+                    onClick={closeSidebar}
+                />
+            )}
+        </>
     );
-
 }
 
 export default Sidebar;
-
